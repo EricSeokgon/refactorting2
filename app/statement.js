@@ -25,17 +25,22 @@ let plays = {
 };
 
 function statement(invoice, plays) {
-    let totalAmount = 0;
     let result = `청구 내역 ( 고객명 : ${invoice.customer})\n`;
     for (let perf of invoice.performance) {
-
-        //청구 내역을 출력한다.
-        result += ` ${playFor(perf).name}: ${usd(thisAmount / 100)} (${perf.audience}석)\n`;
-        totalAmount += amountFor(perf);
+        result += ` ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n`;
     }
-    result += `총액: ${usd(totalAmount / 100)}\n`;
+    let totalAmount = appleSauce();
+    result += `총액: ${usd(totalAmount)}\n`;
     result += `적립 포인트: ${(totalVolumeCredits())}점\n`;
     return result;
+}
+
+function appleSauce() {
+    let totalAmount = 0;
+    for (let perf of invoice.performance) {
+        totalAmount += amountFor(perf);
+    }
+    return totalAmount;
 }
 
 function totalVolumeCredits() {
@@ -45,6 +50,7 @@ function totalVolumeCredits() {
     }
     return volumeCredits;
 }
+
 function volumeCreditsFor(perf) {
     let result = 0;
     result += Math.max(perf.audience - 30, 0);
