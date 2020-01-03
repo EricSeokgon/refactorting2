@@ -25,8 +25,20 @@ let plays = {
 };
 
 function statement(invoice, plays) {
-    let result = `청구 내역 ( 고객명 : ${invoice.customer})\n`;
-    for (let perf of invoice.performance) {
+    const statementData = {};
+    statementData.customer = invoice.customer;
+    statementData.performances = invoice.performances.map(enrichPerformance);
+    return renderPlainText(statementData, plays);
+}
+
+function enrichPerformance(aPerformance) {
+    const result = Object.assign({}, aPerformance); // 얕은 복사 수행
+    return result;
+}
+
+function renderPlainText(data, invoice, plays) {
+    let result = `청구 내역 ( 고객명 : ${data.customer})\n`;
+    for (let perf of data.performances) {
         result += ` ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n`;
     }
     result += `총액: ${usd(totalAmount())}\n`;
@@ -36,7 +48,7 @@ function statement(invoice, plays) {
 
 function totalAmount() {
     let result = 0;
-    for (let perf of invoice.performance) {
+    for (let perf of data.performances) {
         result += amountFor(perf);
     }
     return result;
@@ -44,7 +56,7 @@ function totalAmount() {
 
 function totalVolumeCredits() {
     let result = 0;
-    for (let perf of invoice.performance) { // 값 누적 부분을 별도 for문으로 분리
+    for (let perf of data.performances) { // 값 누적 부분을 별도 for문으로 분리
         result += volumeCreditsFor(perf);
     }
     return result;
@@ -66,10 +78,10 @@ function usd(aNumber) {
 }
 
 function amountFor(aPerformance) {
-    let result =0;
+    let result = 0;
     switch (playFor(aPerformance).type) {
         case "비극":
-            result=40000;
+            result = 40000;
             if (aPerformance.audience > 30) {
                 result += 1000 * (aPerformance.audience - 30);
             }
@@ -90,3 +102,4 @@ function amountFor(aPerformance) {
 function playFor(aPerformance) {
     return plays[aPerformance.displayId];
 }
+
