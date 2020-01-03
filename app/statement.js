@@ -1,3 +1,29 @@
+let invoices =
+    [
+        {
+            "customer": "BigCo",
+            "performances": [
+                {
+                    "playID": "hamlet",
+                    "audience": 55
+                },
+                {
+                    "playID": "as-like",
+                    "audience": 35
+                },
+                {
+                    "playID": "othello",
+                    "audience": 40
+                }
+            ]
+        }
+    ];
+let plays = {
+    "hamlet": {"name": "Hamlet", "type": "tragedy"},
+    "as-like": {"name": "As You Like It", "type": "comedy"},
+    "othello": {"name": "Othello", "type": "tragedy"}
+};
+
 function statement(invoice, plays) {
     let totalAmount = 0;
     let volumeCredits = 0;
@@ -9,12 +35,7 @@ function statement(invoice, plays) {
     }).format();
 
     for (let perf of invoice.performance) {
-        let thisAmount = amountFor(perf, playFor(perf));
-
-        //포인트를 적립한다.
-        volumeCredits += Math.max(perf.audience - 30, 0);
-        //희극 관객 5명마다 추가 포인트를 제공한다.
-        if ("희극" === playFor(perf).type) volumeCredits += Math.floor(perf.audience / 5);
+        volumeCredits += volumeCreditsFor(perf);
 
         //청구 내역을 출력한다.
         result += ` ${playFor(perf).name}: ${format(thisAmount / 100)} (${perf.audience}석)\n`;
@@ -25,7 +46,11 @@ function statement(invoice, plays) {
     return result;
 }
 
-let invoices = 'app/invoices.json';
-let plays = 'app/plays.json';
+function volumeCreditsFor(perf) {
+    let result = 0;
+    result += Math.max(perf.audience - 30, 0);
+    if ("희극" === playFor(perf).type) result += Math.floor(perf.audience / 5);
+    return result;
+}
 
 statement(invoices, plays);

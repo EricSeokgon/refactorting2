@@ -1,4 +1,4 @@
-function amountFor(aPerformance, play) {
+function amountFor(aPerformance) {
        let result =0;
 
         switch (playFor(aPerformance).type) {
