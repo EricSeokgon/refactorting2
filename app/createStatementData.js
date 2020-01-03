@@ -1,3 +1,8 @@
+vlass PerformanceCalculator{
+    constructor(aPerformance){
+        this.performance = aPerformance;
+    }
+}
 export default function createStatementData(invoice, plays) {
     const result = {};
     result.customer = invoice.customer;
@@ -8,7 +13,8 @@ export default function createStatementData(invoice, plays) {
 }
 
 function enrichPerformance(aPerformance) {
-    const result = Object.assign({}, aPerformance); // 얕은 복사 수행
+    const calculator = new PerformanceCalculator(aPerformance);
+    const result = Object.assign({}, aPerformance);
     result.play = playFor(result);
     result.amount = amountFor(result);
     result.volumeCredits = volumeCreditsFor(result);
@@ -49,17 +55,11 @@ function volumeCreditsFor(aPerformance) {
 }
 
 function totalAmount(data) {
-    let result = 0;
-    for (let perf of data.performances) {
-        result += perf.amount;
-    }
-    return result;
+    return data.performances
+        .reduce((total, p) => total + p.amount, 0);
 }
 
 function totalVolumeCredits(data) {
-    let result = 0;
-    for (let perf of data.performances) { // 값 누적 부분을 별도 for문으로 분리
-        result += volumeCreditsFor(perf);
-    }
-    return result;
+    return data.performances
+        .reduce((total, p) => total + p.volumeCredits, 0);
 }

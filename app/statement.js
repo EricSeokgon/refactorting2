@@ -24,9 +24,10 @@ let plays = {
     "othello": {"name": "Othello", "type": "tragedy"}
 };
 
-import createStatementData from "app/createStatementData.js";
+//import createStatementData from 'createStatementData';
+const createStatementData = requite('createStatementData');
 
-function hrmlStatement(invoice, plays) {
+function htmlStatement(invoice, plays) {
     return renderHtml(createStatementData(invoice, plays));
 }
 
@@ -52,4 +53,4 @@ function usd(aNumber) {
     }).format(aNumber / 100);
 }
 
-statement(invoices, plays);
+htmlStatement(invoices, plays);
