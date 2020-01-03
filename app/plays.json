@@ -1,0 +1,5 @@
+{
+  "hamlet": {"name":"Hamlet","type":"비극"},
+  "as-like": {"name":"As you Like It","type":"희극"},
+  "othello": {"name":"Othello","type":"비극"}
+}
